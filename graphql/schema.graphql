@@ -1,0 +1,90 @@
+"A date string with format `Y-m-d`, e.g. `2011-05-23`."
+scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
+
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
+scalar DateTime
+    @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+type Query {
+    users: [User!]! @paginate(defaultCount: 10)
+    user(id: ID @eq): User @find
+    fuel_entries(id: ID @eq): fuel_entries @find
+    fuel_entries: [fuel_entries] @all # name of  relation comments in  post model #
+    insurance_payments(id: ID @eq): fuel_entries @find
+    insurance_payments: [insurance_payments] @all # name of  relation comments in  post model #
+    services(id: ID @eq): services @find
+    services: [services] @all # name of  relation comments in  post model #
+    vehicles(id: ID @eq): vehicles @find
+    vehicles: [vehicles] @all
+
+    created(id: ID @eq): vehicles @find
+    created: [vehicles] @all # name of  relation comments in  post model #
+    VehiclesSearch(
+        # filter_attribute: String!
+        # filter_data: String!
+        sortby: String!
+        column: String!
+        search: String!
+    ): [vehicles]
+}
+
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type vehicles {
+    id: ID!
+    name: String!
+    plate_number: String!
+    filter(startwith: String): [vehicles]
+
+    cost: fuel_entries @belongsTo
+    amount: insurance_payments @belongsTo
+    total: services @belongsTo
+    created: created
+
+    imei: String!
+    vin: String!
+    year: String!
+    licenseIndex: String!
+}
+
+type fuel_entries {
+    id: ID!
+    name: String!
+    entry_date: String! # want  /
+    volume: String!
+    cost: String!
+    plate_number: String!
+}
+
+type insurance_payments {
+    id: ID!
+    amount: String!
+    cost: String!
+    expiration_date: String!
+    contract_date: String! # want  /
+}
+
+type services {
+    id: ID!
+    start_date: String!
+    end_date: String!
+    invoice_number: String!
+    purchase_order_number: String!
+    discount: String!
+    tax: String!
+    total: String!
+    created_at: String! # want  /
+}
+
+type created {
+    id: ID!
+    entry_date: fuel_entries @belongsTo
+    contract_date: insurance_payments @belongsTo
+    created_at: services @belongsTo
+}
