@@ -79,7 +79,7 @@ type services {
     discount: String!
     tax: String!
     total: String!
-    created_at: String! # want  /
+    created_at: String!
 }
 
 type created {
